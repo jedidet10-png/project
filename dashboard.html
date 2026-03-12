@@ -1,0 +1,756 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="display-5 fw-bold">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+            </h1>
+            <p class="text-muted">Manage all content of your portfolio</p>
+        </div>
+    </div>
+
+    <!-- Tabs Navigation -->
+    <ul class="nav nav-tabs mb-4" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button">
+                <i class="fas fa-user"></i> Profile
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="education-tab" data-bs-toggle="tab" data-bs-target="#education" type="button">
+                <i class="fas fa-graduation-cap"></i> Education
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="experience-tab" data-bs-toggle="tab" data-bs-target="#experience" type="button">
+                <i class="fas fa-briefcase"></i> Experience
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="projects-tab" data-bs-toggle="tab" data-bs-target="#projects" type="button">
+                <i class="fas fa-code"></i> Projects
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="skills-tab" data-bs-toggle="tab" data-bs-target="#skills" type="button">
+                <i class="fas fa-tools"></i> Skills
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="hobbies-tab" data-bs-toggle="tab" data-bs-target="#hobbies" type="button">
+                <i class="fas fa-heart"></i> Hobbies
+            </button>
+        </li>
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content">
+        <!-- Profile Tab -->
+        <div class="tab-pane fade show active" id="profile" role="tabpanel">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-user-circle"></i> Profile Information</h5>
+                </div>
+                <div class="card-body">
+                    <form id="profileForm" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Full Name</label>
+                                    <input type="text" class="form-control" name="name" required value="{{ profile.name if profile else '' }}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Profile Picture</label>
+                                    <input type="file" class="form-control" name="image" accept="image/*">
+                                    {% if profile and profile.image %}
+                                    <small class="text-muted">Current: <img src="/static/{{ profile.image }}" alt="Current" style="width: 50px; height: 50px; border-radius: 50%; margin-top: 0.5rem;"></small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" name="contact_email" value="{{ profile.contact_email if profile else '' }}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Phone</label>
+                            <input type="tel" class="form-control" name="contact_phone" value="{{ profile.contact_phone if profile else '' }}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">About Me</label>
+                            <textarea class="form-control" name="about" rows="5">{{ profile.about if profile else '' }}</textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Save Profile
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Education Tab -->
+        <div class="tab-pane fade" id="education" role="tabpanel">
+            <div class="row">
+                <div class="col-lg-5 mb-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Add Education</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="educationForm">
+                                <div class="mb-3">
+                                    <label class="form-label">Degree</label>
+                                    <input type="text" class="form-control" name="degree" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">School/University</label>
+                                    <input type="text" class="form-control" name="school" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Field of Study</label>
+                                    <input type="text" class="form-control" name="field">
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Start Year</label>
+                                            <input type="text" class="form-control" name="start_year" placeholder="2020">
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">End Year</label>
+                                            <input type="text" class="form-control" name="end_year" placeholder="2024">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Description</label>
+                                    <textarea class="form-control" name="description" rows="3"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fas fa-plus"></i> Add Education
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    <div id="educationList"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Experience Tab -->
+        <div class="tab-pane fade" id="experience" role="tabpanel">
+            <div class="row">
+                <div class="col-lg-5 mb-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Add Experience</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="experienceForm">
+                                <div class="mb-3">
+                                    <label class="form-label">Job Title</label>
+                                    <input type="text" class="form-control" name="title" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Company</label>
+                                    <input type="text" class="form-control" name="company" required>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Start Date</label>
+                                            <input type="text" class="form-control" name="start_date" placeholder="Jan 2023">
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">End Date</label>
+                                            <input type="text" class="form-control" name="end_date" placeholder="Dec 2023">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Description</label>
+                                    <textarea class="form-control" name="description" rows="3"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fas fa-plus"></i> Add Experience
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    <div id="experienceList"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Projects Tab -->
+        <div class="tab-pane fade" id="projects" role="tabpanel">
+            <div class="row">
+                <div class="col-lg-5 mb-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Add Project</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="projectForm" enctype="multipart/form-data">
+                                <div class="mb-3">
+                                    <label class="form-label">Project Title</label>
+                                    <input type="text" class="form-control" name="title" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Description</label>
+                                    <textarea class="form-control" name="description" rows="3" required></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Technologies (comma separated)</label>
+                                    <input type="text" class="form-control" name="technologies" placeholder="Python, Flask, MySQL">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Project Link</label>
+                                    <input type="url" class="form-control" name="link" placeholder="https://...">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Project Image</label>
+                                    <input type="file" class="form-control" name="image" accept="image/*">
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fas fa-plus"></i> Add Project
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    <div id="projectsList"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Skills Tab -->
+        <div class="tab-pane fade" id="skills" role="tabpanel">
+            <div class="row">
+                <div class="col-lg-5 mb-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Add Skill</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="skillForm">
+                                <div class="mb-3">
+                                    <label class="form-label">Skill Name</label>
+                                    <input type="text" class="form-control" name="name" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Proficiency Level</label>
+                                    <select class="form-select" name="proficiency">
+                                        <option value="Beginner">Beginner</option>
+                                        <option value="Intermediate" selected>Intermediate</option>
+                                        <option value="Advanced">Advanced</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fas fa-plus"></i> Add Skill
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    <div id="skillsList"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hobbies Tab -->
+        <div class="tab-pane fade" id="hobbies" role="tabpanel">
+            <div class="row">
+                <div class="col-lg-5 mb-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Add Hobby</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="hobbyForm">
+                                <div class="mb-3">
+                                    <label class="form-label">Hobby Name</label>
+                                    <input type="text" class="form-control" name="name" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Description</label>
+                                    <textarea class="form-control" name="description" rows="3"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fas fa-plus"></i> Add Hobby
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    <div id="hobbiesList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .dashboard-container {
+        padding-bottom: 2rem;
+    }
+    
+    .nav-tabs .nav-link {
+        color: #666;
+        border: none;
+        border-bottom: 3px solid transparent;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .nav-tabs .nav-link:hover {
+        color: #667eea;
+        border-bottom-color: #667eea;
+    }
+    
+    .nav-tabs .nav-link.active {
+        color: white;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-bottom: 3px solid #667eea;
+    }
+    
+    .item-card {
+        border: none;
+        border-left: 4px solid #667eea;
+        margin-bottom: 1rem;
+        border-radius: 0 10px 10px 0;
+    }
+    
+    .item-card .card-header {
+        background: #f8f9fa;
+        border: none;
+        padding: 1rem;
+    }
+    
+    .item-card .card-header h6 {
+        margin-bottom: 0;
+        color: #333;
+        font-weight: 600;
+    }
+    
+    .btn-group-sm {
+        display: flex;
+        gap: 0.5rem;
+    }
+</style>
+
+<script>
+    const API_BASE = '/api';
+
+    // Profile Form
+    document.getElementById('profileForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        
+        try {
+            const response = await fetch(`${API_BASE}/profile`, {
+                method: 'POST',
+                body: formData
+            });
+            
+            if (response.ok) {
+                alert('Profile updated successfully!');
+                e.target.reset();
+            } else {
+                alert('Error updating profile');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error updating profile');
+        }
+    });
+
+    // Education Functions
+    async function loadEducation() {
+        try {
+            const response = await fetch(`${API_BASE}/education`);
+            const data = await response.json();
+            const container = document.getElementById('educationList');
+            
+            if (data.length === 0) {
+                container.innerHTML = '<p class="text-muted">No education added yet.</p>';
+                return;
+            }
+            
+            container.innerHTML = data.map(edu => `
+                <div class="card item-card">
+                    <div class="card-header">
+                        <h6>${edu.degree} - ${edu.school}</h6>
+                        <small class="text-muted">${edu.field || ''} (${edu.start_year || 'Start'} - ${edu.end_year || 'Present'})</small>
+                    </div>
+                    <div class="card-body">
+                        <p>${edu.description || 'No description'}</p>
+                        <div class="btn-group-sm">
+                            <button class="btn btn-sm btn-warning" onclick="editEducation(${edu.id})">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteEducation(${edu.id})">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    document.getElementById('educationForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData);
+        
+        try {
+            const response = await fetch(`${API_BASE}/education`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            
+            if (response.ok) {
+                e.target.reset();
+                loadEducation();
+            } else {
+                alert('Error adding education');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    });
+
+    async function deleteEducation(id) {
+        if (!confirm('Are you sure?')) return;
+        
+        try {
+            const response = await fetch(`${API_BASE}/education/${id}`, { method: 'DELETE' });
+            if (response.ok) {
+                loadEducation();
+            } else {
+                alert('Error deleting education');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    // Experience Functions
+    async function loadExperience() {
+        try {
+            const response = await fetch(`${API_BASE}/experience`);
+            const data = await response.json();
+            const container = document.getElementById('experienceList');
+            
+            if (data.length === 0) {
+                container.innerHTML = '<p class="text-muted">No experience added yet.</p>';
+                return;
+            }
+            
+            container.innerHTML = data.map(exp => `
+                <div class="card item-card">
+                    <div class="card-header">
+                        <h6>${exp.title} - ${exp.company}</h6>
+                        <small class="text-muted">${exp.start_date || 'Start'} - ${exp.end_date || 'Present'}</small>
+                    </div>
+                    <div class="card-body">
+                        <p>${exp.description || 'No description'}</p>
+                        <div class="btn-group-sm">
+                            <button class="btn btn-sm btn-warning" onclick="editExperience(${exp.id})">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteExperience(${exp.id})">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    document.getElementById('experienceForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData);
+        
+        try {
+            const response = await fetch(`${API_BASE}/experience`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            
+            if (response.ok) {
+                e.target.reset();
+                loadExperience();
+            } else {
+                alert('Error adding experience');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    });
+
+    async function deleteExperience(id) {
+        if (!confirm('Are you sure?')) return;
+        
+        try {
+            const response = await fetch(`${API_BASE}/experience/${id}`, { method: 'DELETE' });
+            if (response.ok) {
+                loadExperience();
+            } else {
+                alert('Error deleting experience');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    // Projects Functions
+    async function loadProjects() {
+        try {
+            const response = await fetch(`${API_BASE}/projects`);
+            const data = await response.json();
+            const container = document.getElementById('projectsList');
+            
+            if (data.length === 0) {
+                container.innerHTML = '<p class="text-muted">No projects added yet.</p>';
+                return;
+            }
+            
+            container.innerHTML = data.map(proj => `
+                <div class="card item-card">
+                    <div class="card-header">
+                        <h6>${proj.title}</h6>
+                        ${proj.image ? `<small><img src="/static/${proj.image}" alt="Project" style="width: 50px; height: 50px; border-radius: 5px; margin-top: 0.5rem;"></small>` : ''}
+                    </div>
+                    <div class="card-body">
+                        <p>${proj.description}</p>
+                        ${proj.technologies ? `<p class="mb-2"><strong>Tech:</strong> ${proj.technologies}</p>` : ''}
+                        ${proj.link ? `<p class="mb-2"><a href="${proj.link}" target="_blank" class="text-primary">View Link</a></p>` : ''}
+                        <div class="btn-group-sm">
+                            <button class="btn btn-sm btn-warning" onclick="editProject(${proj.id})">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteProject(${proj.id})">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    document.getElementById('projectForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        
+        try {
+            const response = await fetch(`${API_BASE}/projects`, {
+                method: 'POST',
+                body: formData
+            });
+            
+            if (response.ok) {
+                e.target.reset();
+                loadProjects();
+            } else {
+                alert('Error adding project');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    });
+
+    async function deleteProject(id) {
+        if (!confirm('Are you sure?')) return;
+        
+        try {
+            const response = await fetch(`${API_BASE}/projects/${id}`, { method: 'DELETE' });
+            if (response.ok) {
+                loadProjects();
+            } else {
+                alert('Error deleting project');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    // Skills Functions
+    async function loadSkills() {
+        try {
+            const response = await fetch(`${API_BASE}/skills`);
+            const data = await response.json();
+            const container = document.getElementById('skillsList');
+            
+            if (data.length === 0) {
+                container.innerHTML = '<p class="text-muted">No skills added yet.</p>';
+                return;
+            }
+            
+            container.innerHTML = data.map(skill => `
+                <div class="card item-card">
+                    <div class="card-body">
+                        <h6>${skill.name}</h6>
+                        <small class="text-muted">${skill.proficiency || 'Intermediate'}</small>
+                        <div class="btn-group-sm mt-3">
+                            <button class="btn btn-sm btn-warning" onclick="editSkill(${skill.id})">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteSkill(${skill.id})">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    document.getElementById('skillForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData);
+        
+        try {
+            const response = await fetch(`${API_BASE}/skills`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            
+            if (response.ok) {
+                e.target.reset();
+                loadSkills();
+            } else {
+                alert('Error adding skill');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    });
+
+    async function deleteSkill(id) {
+        if (!confirm('Are you sure?')) return;
+        
+        try {
+            const response = await fetch(`${API_BASE}/skills/${id}`, { method: 'DELETE' });
+            if (response.ok) {
+                loadSkills();
+            } else {
+                alert('Error deleting skill');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    // Hobbies Functions
+    async function loadHobbies() {
+        try {
+            const response = await fetch(`${API_BASE}/hobbies`);
+            const data = await response.json();
+            const container = document.getElementById('hobbiesList');
+            
+            if (data.length === 0) {
+                container.innerHTML = '<p class="text-muted">No hobbies added yet.</p>';
+                return;
+            }
+            
+            container.innerHTML = data.map(hobby => `
+                <div class="card item-card">
+                    <div class="card-body">
+                        <h6>${hobby.name}</h6>
+                        <p>${hobby.description || 'No description'}</p>
+                        <div class="btn-group-sm">
+                            <button class="btn btn-sm btn-warning" onclick="editHobby(${hobby.id})">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteHobby(${hobby.id})">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    document.getElementById('hobbyForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData);
+        
+        try {
+            const response = await fetch(`${API_BASE}/hobbies`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            
+            if (response.ok) {
+                e.target.reset();
+                loadHobbies();
+            } else {
+                alert('Error adding hobby');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    });
+
+    async function deleteHobby(id) {
+        if (!confirm('Are you sure?')) return;
+        
+        try {
+            const response = await fetch(`${API_BASE}/hobbies/${id}`, { method: 'DELETE' });
+            if (response.ok) {
+                loadHobbies();
+            } else {
+                alert('Error deleting hobby');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    // Load all data on page load
+    window.addEventListener('DOMContentLoaded', () => {
+        loadEducation();
+        loadExperience();
+        loadProjects();
+        loadSkills();
+        loadHobbies();
+    });
+</script>
+{% endblock %}

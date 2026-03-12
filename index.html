@@ -1,0 +1,340 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="portfolio-page">
+    <!-- Hero Section -->
+    <section id="home" class="hero-section mb-5">
+        <div class="row align-items-center">
+            <div class="col-lg-6 text-center mb-4 mb-lg-0">
+                {% if profile and profile.image %}
+                <img src="/static/{{ profile.image }}" alt="Profile" class="profile-image">
+                {% else %}
+                <div class="profile-placeholder">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                {% endif %}
+            </div>
+            <div class="col-lg-6">
+                {% if profile %}
+                <h1 class="display-4 fw-bold mb-3">
+                    <span class="gradient-text">{{ profile.name }}</span>
+                </h1>
+                <p class="lead text-muted mb-4">Full Stack Developer | Open Source Enthusiast</p>
+                {% if profile.contact_email %}
+                <a href="mailto:{{ profile.contact_email }}" class="btn btn-primary me-2 mb-2">
+                    <i class="fas fa-envelope"></i> Email Me
+                </a>
+                {% endif %}
+                {% if profile.contact_phone %}
+                <a href="tel:{{ profile.contact_phone }}" class="btn btn-outline-primary mb-2">
+                    <i class="fas fa-phone"></i> Call Me
+                </a>
+                {% endif %}
+                {% else %}
+                <h1 class="display-4 fw-bold mb-3">Welcome to My Portfolio</h1>
+                <p class="lead text-muted">No profile information yet. Login to add content!</p>
+                <a href="/login" class="btn btn-primary">Login to Edit</a>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    {% if profile %}
+    <section id="about" class="about-section mb-5">
+        <div class="section-header">
+            <h2><i class="fas fa-user"></i> About Me</h2>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <p class="fs-5">{{ profile.about or 'No about information added yet.' }}</p>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Education Section -->
+    {% if education %}
+    <section id="education" class="education-section mb-5">
+        <div class="section-header">
+            <h2><i class="fas fa-graduation-cap"></i> Education</h2>
+        </div>
+        <div class="row">
+            {% for edu in education %}
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="mb-0">{{ edu.degree }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="fw-bold text-primary mb-2">{{ edu.school }}</p>
+                        {% if edu.field %}
+                        <p class="mb-2"><strong>Field:</strong> {{ edu.field }}</p>
+                        {% endif %}
+                        {% if edu.start_year or edu.end_year %}
+                        <p class="mb-2">
+                            <strong>Duration:</strong> {{ edu.start_year or 'Start' }} - {{ edu.end_year or 'Present' }}
+                        </p>
+                        {% endif %}
+                        {% if edu.description %}
+                        <p class="text-muted">{{ edu.description }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Experience Section -->
+    {% if experience %}
+    <section id="experience" class="experience-section mb-5">
+        <div class="section-header">
+            <h2><i class="fas fa-briefcase"></i> Experience</h2>
+        </div>
+        <div class="timeline">
+            {% for exp in experience %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">{{ exp.title }}</h5>
+                    <small class="text-white">{{ exp.company }}</small>
+                </div>
+                <div class="card-body">
+                    {% if exp.start_date or exp.end_date %}
+                    <p class="text-muted mb-2">
+                        <i class="fas fa-calendar"></i>
+                        {{ exp.start_date or 'Start' }} - {{ exp.end_date or 'Present' }}
+                    </p>
+                    {% endif %}
+                    {% if exp.description %}
+                    <p>{{ exp.description }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Projects Section -->
+    {% if projects %}
+    <section id="projects" class="projects-section mb-5">
+        <div class="section-header">
+            <h2><i class="fas fa-code"></i> Projects</h2>
+        </div>
+        <div class="row">
+            {% for project in projects %}
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    {% if project.image %}
+                    <img src="/static/{{ project.image }}" class="card-img-top" alt="{{ project.title }}" style="height: 250px; object-fit: cover;">
+                    {% endif %}
+                    <div class="card-header">
+                        <h5 class="mb-0">{{ project.title }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>{{ project.description }}</p>
+                        {% if project.technologies %}
+                        <div class="mb-3">
+                            {% for tech in project.technologies.split(',') %}
+                            <span class="badge badge-primary">{{ tech.strip() }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% if project.link %}
+                    <div class="card-footer bg-transparent border-top-0">
+                        <a href="{{ project.link }}" target="_blank" class="btn btn-primary btn-sm w-100">
+                            <i class="fas fa-external-link-alt"></i> View Project
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Skills Section -->
+    {% if skills %}
+    <section id="skills" class="skills-section mb-5">
+        <div class="section-header">
+            <h2><i class="fas fa-tools"></i> Skills</h2>
+        </div>
+        <div class="skills-container">
+            <div class="row">
+                {% for skill in skills %}
+                <div class="col-md-4 mb-3">
+                    <div class="skill-card">
+                        <h6 class="mb-2">{{ skill.name }}</h6>
+                        <div class="skill-bar">
+                            {% if skill.proficiency == 'Beginner' %}
+                            <div class="skill-progress" style="width: 33%"></div>
+                            {% elif skill.proficiency == 'Intermediate' %}
+                            <div class="skill-progress" style="width: 66%"></div>
+                            {% elif skill.proficiency == 'Advanced' %}
+                            <div class="skill-progress" style="width: 100%"></div>
+                            {% endif %}
+                        </div>
+                        <small class="text-muted">{{ skill.proficiency or 'Intermediate' }}</small>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Hobbies Section -->
+    {% if hobbies %}
+    <section id="hobbies" class="hobbies-section mb-5">
+        <div class="section-header">
+            <h2><i class="fas fa-heart"></i> Hobbies & Interests</h2>
+        </div>
+        <div class="row">
+            {% for hobby in hobbies %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-smile text-primary" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                        <h5 class="card-title">{{ hobby.name }}</h5>
+                        {% if hobby.description %}
+                        <p class="card-text text-muted">{{ hobby.description }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Contact Section -->
+    {% if profile %}
+    <section id="contact" class="contact-section mb-5">
+        <div class="section-header">
+            <h2><i class="fas fa-envelope"></i> Get In Touch</h2>
+        </div>
+        <div class="row">
+            <div class="col-md-4 mb-3 text-center">
+                <div class="contact-card">
+                    <i class="fas fa-envelope"></i>
+                    <h5>Email</h5>
+                    {% if profile.contact_email %}
+                    <a href="mailto:{{ profile.contact_email }}">{{ profile.contact_email }}</a>
+                    {% else %}
+                    <p class="text-muted">Not provided</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-4 mb-3 text-center">
+                <div class="contact-card">
+                    <i class="fas fa-phone"></i>
+                    <h5>Phone</h5>
+                    {% if profile.contact_phone %}
+                    <a href="tel:{{ profile.contact_phone }}">{{ profile.contact_phone }}</a>
+                    {% else %}
+                    <p class="text-muted">Not provided</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-4 mb-3 text-center">
+                <div class="contact-card">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <h5>Location</h5>
+                    <p class="text-muted">Update in dashboard</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+</div>
+
+<style>
+    .hero-section {
+        padding: 3rem 0;
+    }
+    
+    .profile-image {
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        object-fit: cover;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        border: 5px solid white;
+    }
+    
+    .profile-placeholder {
+        width: 300px;
+        height: 300px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 50%;
+        font-size: 150px;
+        color: white;
+    }
+    
+    .gradient-text {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    
+    .skill-card {
+        padding: 1rem;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
+    
+    .skill-bar {
+        width: 100%;
+        height: 8px;
+        background: #e0e0e0;
+        border-radius: 10px;
+        overflow: hidden;
+        margin: 0.5rem 0;
+    }
+    
+    .skill-progress {
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 10px;
+        transition: width 0.3s ease;
+    }
+    
+    .contact-card {
+        padding: 2rem;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
+    
+    .contact-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+    }
+    
+    .contact-card i {
+        font-size: 2.5rem;
+        color: #667eea;
+        margin-bottom: 1rem;
+    }
+    
+    .contact-card a {
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 600;
+    }
+    
+    .contact-card a:hover {
+        text-decoration: underline;
+    }
+</style>
+{% endblock %}
