@@ -8,8 +8,9 @@ from datetime import datetime
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key-change-this'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///portfolio.db'
-app.config['UPLOAD_FOLDER'] = 'static/uploads'
+BASE_DIR=os.path.abspath(os.path.dirname(__file__))
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'os.path.join(BASE_DIR,'portfolio.db')
+app.config['UPLOAD_FOLDER'] = os.path.join(BASE_DIR,'static,'uploads')
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 
 # Create upload folder if it doesn't exist
